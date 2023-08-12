@@ -1,0 +1,110 @@
+<section>
+    <div class="container ">
+
+
+        <!--Bread crumb  -->
+        <div class="row">
+            <div class="col">
+                <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a [routerLink]="['/']">Home</a></li>
+                        <li class="breadcrumb-item"><a [routerLink]="['/users-list']">Users</a></li>
+                        <li class="breadcrumb-item active" aria-current="page"> {{isUpdating?'Update':'Add'}} user</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+
+        <ng-container *ngIf="!(loading$ | async) else loadingTemplate ">
+                  
+            <div class=" row text-center d-flex justify-content-center">
+                <!--  -->
+                <div class="col-lg-6 col-sm-12 col-md-6  ">
+                    <div class="card w-100">
+                        <div class="card-body text-center">
+                            <form *ngIf="form" [formGroup]="form" (ngSubmit)="onSubmit()">
+
+                                <!-- name -->
+                                <div class="input-group mb-3">
+                                    <input type="text" formControlName="name" class="form-control" placeholder="Name*">
+                                </div>
+                                <!--  -->
+
+                                <!-- job -->
+                                <div class="input-group mb-4">
+                                    <input type="text" formControlName="job" class="form-control"
+                                        placeholder="Job*">
+                                </div>
+                                <!--  -->
+
+
+     
+                                <div class="row">
+                                    <div class="col-12">
+
+                                        <button [disabled]="form.invalid || (requestLoading$ | async)" type="button" type="submit" class="btn btn-primary px-5">
+
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <span > {{isUpdating?'Update':'Add'}}</span>
+                                            <span class="mx-1"></span>
+                                            <div *ngIf="(requestLoading$|async)" class="spinner-border spinner-border-sm" role="status">
+                                            </div>
+                                          </div>
+
+
+
+                                        </button>
+                                    </div>
+
+                                </div>
+                                <div class="row mt-3" *ngIf="error$ | async">
+                                    <div class="col-12">
+                                        <div class="alert alert-danger" role="alert">
+                                            Sorry, Error occurred while updating
+                                          </div>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-3" *ngIf="success$ | async">
+                                    <div class="col-12">
+                                        <div class="alert alert-success" role="alert">
+                                            User have been {{isUpdating?'updated':'added'}} successfully
+                                          </div>
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!--  -->
+
+
+
+            </div>
+        </ng-container>
+        
+      
+
+
+    </div>
+
+
+
+
+
+
+
+</section>
+
+
+<ng-template #loadingTemplate>
+    <div class="row text-center text-center  ">
+        <div class="text-center">
+            <ngx-skeleton-loader animation="pulse" [theme]="{height: '170px', background: 'white',width:'400px'}" count="1" appearance="line"></ngx-skeleton-loader>
+        </div>
+     
+  
+    </div>
+</ng-template>

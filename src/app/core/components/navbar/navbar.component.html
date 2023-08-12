@@ -1,0 +1,12 @@
+<nav *ngIf="isLoggedIn()" class="navbar navbar-dark bg-primary">
+    <div class="container">
+        <a class="navbar-brand" [routerLink]="['/']" >Users App</a>
+
+        <div class="pull-right">
+            
+            <i (click)="logout()" class="fa fa-sign-out fa-lg icon" aria-hidden="true"></i>
+
+
+        </div>
+    </div>
+</nav>

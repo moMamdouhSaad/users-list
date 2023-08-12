@@ -1,0 +1,75 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8  ">
+      <div class="card-group mb-0">
+        <div class="card p-4">
+          <div class="card-body d-flex align-items-center"  style="height:370px">
+            <div class='w-100'>
+              <h1>Sign up</h1>
+              <p class="text-muted">Register a new account</p>
+  
+              <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
+  
+              <!-- Email -->
+              <div class="input-group mb-3">
+                <input type="text" formControlName="email" class="form-control" placeholder="Email">
+              </div>
+              <!--  -->
+  
+              <!-- Password -->
+              <div class="input-group mb-4">
+                <input type="password" formControlName="password" class="form-control" placeholder="Password">
+              </div>
+              <!--  -->
+  
+             
+        
+  
+  
+              <div class="row">
+                <div class="col-12">
+                  <button [disabled]="(loading$|async) || signUpForm.invalid " type="button" type="submit" class="btn btn-primary px-4 w-100">
+
+                  <div class="d-flex justify-content-center align-items-center">
+                    <span >Sign up</span>
+                    <span class="mx-1"></span>
+                    <div *ngIf="(loading$|async)" class="spinner-border spinner-border-sm" role="status">
+                    </div>
+                  </div>
+                  </button>
+                </div>
+            
+              </div>
+  
+  
+              <div class=" mt-3" *ngIf="(error$ | async) as error">
+                    <div class="alert alert-danger" role="alert">
+                       {{error|| 'Error occured while regisering a new user'}}
+                      </div>
+                </div>
+             
+              </form>
+            </div>
+          
+          </div>
+        </div>
+        <div class="card text-white bg-primary py-5 d-md-down-none" >
+          <div class="card-body text-center d-flex align-items-center justify-content-center" >
+            <div class="d-flex flex-column ">
+              <h2>Login</h2>
+              <span class="mb-2">You are already user ?</span>
+              <span>You can login be click on</span>
+              <button type="button" [routerLink]="['/login']"   class="btn btn-primary px-5  active mt-1">Login</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+</div>
+
+
+
+

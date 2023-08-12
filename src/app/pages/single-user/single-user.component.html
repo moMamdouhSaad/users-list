@@ -1,0 +1,123 @@
+<section>
+  <div class="container ">
+    <!--Bread crumb  -->
+    <div class="row">
+      <div class="col">
+        <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+          <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a [routerLink]="['/']">Home</a></li>
+            <li class="breadcrumb-item"><a [routerLink]="['/users-list']">Users</a></li>
+            <li class="breadcrumb-item active" aria-current="page">User rofile</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+    <!--  -->
+
+    <!-- Error -->
+    <div class="row mt-3" *ngIf="error$ | async">
+      <div class="col-12">
+        <div class="alert alert-danger" role="alert">
+          Sorry, Error occurred while fetch the user
+        </div>
+      </div>
+    </div>
+    <!--  -->
+
+    <!-- User data -->
+    <ng-container *ngIf="(user$ | async) as user; else loadingTemplate ">
+      <div class="row">
+        <!--  -->
+        <div class="col-lg-4">
+          <div class="card mb-4">
+            <div class="card-body text-center">
+              <img [src]="user.avatar" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+              <h5 class="my-3">{{user.first_name +' ' + user.last_name}} </h5>
+              <p class="text-muted mb-1">{{user.email}}</p>
+              <div class="d-flex justify-content-center mt-3 mb-2">
+                <button type="button" disabled class="btn btn-primary">Follow</button>
+                <button type="button" disabled class="btn btn-outline-primary ms-1">Message</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--  -->
+
+
+        <!--  -->
+        <div class="col-lg-8">
+          <div class="card mb-4">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Full Name</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">{{user.first_name +' ' + user.last_name}}</p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Email</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">{{user.email}}</p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Phone</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">-</p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Mobile</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">-</p>
+                </div>
+              </div>
+              <hr>
+              <div class="row">
+                <div class="col-sm-3">
+                  <p class="mb-0">Address</p>
+                </div>
+                <div class="col-sm-9">
+                  <p class="text-muted mb-0">-</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!--  -->
+        </div>
+      </div>
+    </ng-container>
+    <!--  -->
+
+  </div>
+</section>
+
+
+<!-- Loading template -->
+<ng-template #loadingTemplate>
+  <div class="row" *ngIf="!(error$ | async)">
+    <div class="col-md-4 col-sm-12">
+      <ngx-skeleton-loader animation="pulse" [theme]="{height: '270px', background: 'white'}" count="1"
+        appearance="line"></ngx-skeleton-loader>
+
+    </div>
+    <div class="col-md-8 col-sm-12">
+      <ngx-skeleton-loader animation="pulse" [theme]="{height: '70px', background: 'white'}" count="4"
+        appearance="line"></ngx-skeleton-loader>
+    </div>
+
+
+  </div>
+</ng-template>
+<!--  -->

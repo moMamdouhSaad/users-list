@@ -1,0 +1,195 @@
+
+
+
+
+
+<div class="container">
+
+  <!-- breadcrumb -->
+  <div class="row">
+    <div class="col">
+      <nav aria-label="breadcrumb" class="bg-light rounded-3 p-3 mb-4">
+        <ol class="breadcrumb mb-0">
+          <li class="breadcrumb-item"><a [routerLink]="['/']">Home</a></li>
+          <li class="breadcrumb-item"><a [routerLink]="['/users-list']">Users</a></li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+  <!--  -->
+
+
+
+  <ng-container *ngIf="!(loading$ | async); else loadingTemplate ">
+
+
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="main-box clearfix">
+          <div *ngIf="(users$ | async) as users;" class="table-responsive">
+
+            <!-- Per page select input and add button container -->
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <select [formControl]="perPageInputControl" class="form-control form-select">
+                  <option disabled selected>Users per page</option>
+                  <option *ngFor="let option of perPageOptions" [value]="option">{{ option }}</option>
+                </select>
+              </div>
+
+              <div class="pull-right mb-2">
+                <button [routerLink]="['/new-user']" class="btn btn-primary px-5">
+                  Add new user
+                </button>
+
+              </div>
+
+            </div>
+            <!--  -->
+
+
+            <!-- Table -->
+            <table class="table user-list">
+              <thead>
+                <tr>
+                  <th><span>User info</span></th>
+                  <th><span>User ID</span></th>
+                  <th>&nbsp;</th>
+                </tr>
+              </thead>
+              <tbody>
+
+
+
+                <tr *ngFor="let user of users">
+                  <td>
+                    <img [src]="user.avatar" alt="">
+                    <a [routerLink]="['/users',user.id]" class="user-link">{{user.first_name +' '+user.last_name}}</a>
+                    <span class="user-subhead">{{user.email}}</span>
+                  </td>
+                  <td>
+                    {{user.id}}
+                  </td>
+
+
+                  <td style="width: 20%;">
+
+                    <a [routerLink]="['/update-user',user.id]" class="table-link">
+                      <span class="fa-stack">
+                        <i class="fa fa-square fa-stack-2x"></i>
+                        <i class="fa fa-pencil fa-stack-1x fa-inverse"></i>
+                      </span>
+                    </a>
+                    <a (click)="setUserDeleted(user)" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                      class="table-link danger cursor-pointer">
+                      <span class="fa-stack">
+                        <i class="fa fa-square fa-stack-2x"></i>
+                        <i class="fa fa-trash-o fa-stack-1x fa-inverse"></i>
+                      </span>
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <!--  -->
+
+          </div>
+
+          <!-- Paginator -->
+          <div class="d-flex justify-content-center ">
+            <ul class="pagination">
+              <li class="page-item"><a class="page-link cursor-pointer" [class.disabled]="pageNumber == 1"
+                  (click)="loadPreviousPage()">Previous</a></li>
+
+              <ng-container *ngIf="(totalPages$ | async) as totalPages">
+                <li *ngFor="let pageNum of getPageNumbers(totalPages)" class="page-item">
+                  <a [routerLink]="['/users-list']" [class.disabled]="pageNum == pageNumber"
+                    [queryParams]="{page: pageNum,per_page:usersPerPage}" routerLinkActive="router-link-active"
+                    class="page-link">{{pageNum}}</a>
+                </li>
+              </ng-container>
+
+
+              <li class="page-item"><a class="page-link cursor-pointer"
+                  [class.disabled]="pageNumber == (totalPages$ | async)" (click)="loadNextPage()">Next</a></li>
+            </ul>
+          </div>
+          <!--  -->
+
+
+        </div>
+      </div>
+    </div>
+  </ng-container>
+
+
+</div>
+
+
+
+
+<!-- Loading template -->
+<ng-template #loadingTemplate>
+  <div class="row">
+    <div class="col-1">
+      <ngx-skeleton-loader animation="pulse" [theme]="{height: '70px', background: 'white'}" count="8"
+        appearance="line"></ngx-skeleton-loader>
+
+    </div>
+    <div class="col-8">
+      <ngx-skeleton-loader animation="pulse" [theme]="{height: '70px', background: 'white'}" count="8"
+        appearance="line"></ngx-skeleton-loader>
+    </div>
+    <div class="col-3">
+      <ngx-skeleton-loader animation="pulse" [theme]="{height: '70px', background: 'white'}" count="8"
+        appearance="line"></ngx-skeleton-loader>
+    </div>
+
+  </div>
+</ng-template>
+<!--  -->
+
+<!-- Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Delete user</h5>
+        <button type="button" class="btn-close" #closebutton data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" *ngIf="userDeleted">
+
+        Are you sure you want to delete user {{userDeleted.first_name + ' ' + userDeleted.last_name}} ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" [disabled]="userDeleteLoading$ | async"
+          data-bs-dismiss="modal">Close</button>
+        <button (click)="deleteUser()" type="button" [disabled]="userDeleteLoading$ | async" class="btn btn-danger">
+
+          <div class="d-flex justify-content-center align-items-center">
+            <span>Delete</span>
+            <span class="mx-1"></span>
+            <div *ngIf="(userDeleteLoading$|async)" class="spinner-border spinner-border-sm" role="status">
+            </div>
+          </div>
+
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--  -->
+
+<!-- Toaster -->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header bg-success text-light">
+      <strong class="me-auto">Message</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      User deleted successfully
+    </div>
+  </div>
+</div>
+<!--  -->
